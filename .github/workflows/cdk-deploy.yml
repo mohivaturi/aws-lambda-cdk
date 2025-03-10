@@ -19,7 +19,15 @@ jobs:
           node-version: 18  # Ensure you use Node 18+
 
       - name: Install AWS CDK
-        run: npm install -g aws-cdk  # Ensure CDK is installed
+        run: npm install -g aws-cdk  # Ensure CDK CLI is installed
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9  # Use the Python version that matches your project
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt  # Install aws-cdk-lib and constructs
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -27,9 +35,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Change based on your AWS region
-
-      - name: Install Dependencies
-        run: npm install  # Installs project dependencies
 
       - name: Deploy CDK Stack
         run: cdk deploy --require-approval never
